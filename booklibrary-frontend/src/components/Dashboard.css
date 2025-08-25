@@ -1,0 +1,15 @@
+.dashboard {
+  margin-top: 30px;
+}
+
+.dashboard h2 {
+  margin-bottom: 15px;
+  color: #4a148c;
+}
+
+.book-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
