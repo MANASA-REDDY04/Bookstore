@@ -42,34 +42,40 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
+      {/* Banner */}
+      <div className="banner">
+        <h1>📚 Welcome to Digital Bevy Bookstore 📖</h1>
+        <p className="banner-quote">{quotes[quoteIndex]}</p>
+      </div>
+
+      {/* Search bar */}
       <SearchBar setBooks={setBooks} />
 
+      {/* Books / Loader */}
       <div className="book-grid">
-  {loading ? (
-    <>
-      {[...Array(8)].map((_, i) => (
-        <div className="skeleton-card" key={i}>
-          <div className="skeleton-img"></div>
-          <div className="skeleton-line short"></div>
-          <div className="skeleton-line"></div>
-        </div>
-      ))}
-      <p className="quote">{quotes[quoteIndex]}</p>
-    </>
-  ) : books.length > 0 ? (
-    books.map((book) => <BookCard key={book._id} book={book} />)
-  ) : (
-    <div className="empty-state">
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
-        alt="search books"
-      />
-      <h2>Search Your Favourite Books 📚</h2>
-      <p>Every great journey starts with a single page.</p>
-    </div>
-  )}
-</div>
-
+        {loading ? (
+          <div className="skeleton-loader">
+            {[...Array(8)].map((_, i) => (
+              <div className="skeleton-card" key={i}>
+                <div className="skeleton-img"></div>
+                <div className="skeleton-line short"></div>
+                <div className="skeleton-line"></div>
+              </div>
+            ))}
+          </div>
+        ) : books.length > 0 ? (
+          books.map((book) => <BookCard key={book._id} book={book} />)
+        ) : (
+          <div className="empty-state">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
+              alt="search books"
+            />
+            <h2>Search Your Favourite Books 📚</h2>
+            <p>Every great journey starts with a single page.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
