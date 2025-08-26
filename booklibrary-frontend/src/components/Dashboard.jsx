@@ -4,26 +4,72 @@ import SearchBar from "./Searchbar.jsx";
 import { API_PATHS } from "../utils/apiPaths.js";
 import "./Dashboard.css";
 
+const quotes = [
+  "A reader lives a thousand lives before he dies. – George R.R. Martin",
+  "So many books, so little time. – Frank Zappa",
+  "A room without books is like a body without a soul. – Cicero",
+  "Books are a uniquely portable magic. – Stephen King",
+  "The only thing you absolutely have to know is the location of the library. – Albert Einstein"
+];
+
 function Dashboard() {
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
-    fetch(API_PATHS.GET_BOOKS)
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-      .catch((err) => console.error("Error fetching books:", err));
+    const fetchBooks = async () => {
+      try {
+        const res = await fetch(API_PATHS.GET_BOOKS);
+        const data = await res.json();
+        setBooks(data);
+      } catch (err) {
+        console.error("Error fetching books:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBooks();
+  }, []);
+
+  // Rotate quotes every 4s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQuoteIndex((prev) => (prev + 1) % quotes.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="dashboard">
       <SearchBar setBooks={setBooks} />
+
       <div className="book-grid">
-        {books.length > 0 ? (
-          books.map((book) => <BookCard key={book._id} book={book} />)
-        ) : (
-          <p>No books found. Try searching!</p>
-        )}
-      </div>
+  {loading ? (
+    <>
+      {[...Array(8)].map((_, i) => (
+        <div className="skeleton-card" key={i}>
+          <div className="skeleton-img"></div>
+          <div className="skeleton-line short"></div>
+          <div className="skeleton-line"></div>
+        </div>
+      ))}
+      <p className="quote">{quotes[quoteIndex]}</p>
+    </>
+  ) : books.length > 0 ? (
+    books.map((book) => <BookCard key={book._id} book={book} />)
+  ) : (
+    <div className="empty-state">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
+        alt="search books"
+      />
+      <h2>Search Your Favourite Books 📚</h2>
+      <p>Every great journey starts with a single page.</p>
+    </div>
+  )}
+</div>
+
     </div>
   );
 }
